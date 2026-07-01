@@ -21,15 +21,19 @@ app.post("/api/fileanalyse", upload.single("upfile"), (req, res) => {
       return res.json({ error: "Please upload a file" });
     }
 
+    const fileName = req.file.originalname || "file.txt";
+
+    const fileType = req.file.mimetype || "application/octet-stream";
+
+    const fileSize = Number(req.file.size);
+
     res.json({
-      name: req.file.originalname,
-      type: req.file.mimetype,
-      size: req.file.size,
+      name: fileName,
+      type: fileType,
+      size: fileSize,
     });
   } catch (error) {
-    res.status(500).json({
-      error: "Server error",
-    });
+    res.status(400).json({ error: "File upload failed" });
   }
 });
 const port = process.env.PORT || 3000;
